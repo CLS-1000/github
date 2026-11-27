@@ -21,6 +21,7 @@ An interactive demo of SWITCHBOARD, the operator's board over the CLS-1000 syste
 | [`narrative.html`](narrative.html) | Narrative Desk: drafts in the editorial-proof layout, and release behind the publish guard |
 | [`briefs/index.html`](briefs/index.html) | Brief Archive: 22 daily briefs from real SPEC-1 cycles, model-written (April 2026) and rule-based (October 2026), each with a note on where it came from. Sources in [`samples/`](samples/) |
 | [`sample-brief.html`](sample-brief.html) | Sample Brief: the archived April 24, 2026 SPEC-1 daily brief (a real cycle's output, kept as the reference example of the house format). Source: [`samples/spec1-brief-2026-04-24.md`](samples/spec1-brief-2026-04-24.md) |
+| [`penfield.html`](penfield.html) | Penfield Desk: what happens next. Fleet Control (which engines run), the triage queue by tier, the needs-primary-source queue, the editorial desk with its five sign-off checks, and Publish & Deploy |
 | [`mcp.html`](mcp.html) | MCP Console: the tools SPEC-1 exposes to Claude |
 | [`citizen.html`](citizen.html) | Citizen Cognisance: a map of documented ties in Portland's political ecosystem |
 
