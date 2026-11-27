@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Penfield Desk · SWITCHBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08111D;--panel:#0E1A2B;--panel-2:#132338;--line:#24344A;--line-2:#2E4260;
+  --text:#D7DEE6;--muted:#8FA3B8;--dim:#5E7591;--accent:#F26A1B;--paper:#F3EEE3;
+  --green:#3ddc84;--red:#ff5d5d;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --head:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--sans)}
+a{color:var(--text)}
+.strip{position:sticky;top:0;z-index:100;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:6px 16px;background:var(--accent);color:var(--bg);font:600 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.strip span{font-weight:400;text-transform:none;letter-spacing:0}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.brand{font:700 20px/1 var(--head);letter-spacing:.18em;text-transform:uppercase}
+.brand small{font:400 11px var(--mono);letter-spacing:.06em;color:var(--accent);margin-left:8px}
+nav.site{display:flex;flex-wrap:wrap;gap:4px}
+nav.site a{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 10px;border:1px solid transparent;border-radius:4px;color:var(--text)}
+nav.site a.on{border-color:var(--accent);color:var(--accent)}
+.engine{margin-left:auto;font:11px var(--mono);border:1px solid var(--line-2);border-radius:20px;padding:5px 12px;color:var(--muted)}
+.engine b{color:var(--green)}
+.lede{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+.lede p{margin:0;max-width:760px;color:var(--muted)}
+.lede p b{color:var(--text)}
+.counts{display:flex;gap:10px;flex-wrap:wrap}
+.count{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 14px;min-width:120px}
+.count .n{font:600 22px var(--mono)}
+.count .l{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding:14px 20px 0}
+.tabs button{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:none;color:var(--muted);border:1px solid var(--line);border-bottom:none;border-radius:6px 6px 0 0;padding:9px 14px;cursor:pointer}
+.tabs button.on{color:var(--accent);background:var(--panel);border-color:var(--accent)}
+main{padding:0 20px 40px}
+section.pane{display:none;background:var(--panel);border:1px solid var(--line);border-radius:0 6px 6px 6px;padding:18px}
+section.pane.on{display:block}
+h2{font:600 13px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.help{color:var(--dim);font-size:13px;margin:0 0 14px}
+table{width:100%;border-collapse:collapse;font:13px var(--mono)}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px;border-bottom:1px solid var(--line-2)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.group td{color:var(--accent);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-top:16px;border-bottom:1px solid var(--line-2)}
+.pill{display:inline-block;font:600 11px var(--mono);padding:1px 7px;border-radius:3px;border:1px solid}
+.pill.ok{color:var(--green);border-color:rgba(61,220,132,.45)}
+.pill.no{color:var(--red);border-color:rgba(255,93,93,.45)}
+.pill.lead{color:var(--accent);border-color:rgba(242,106,27,.5)}
+.pill.off{color:var(--dim);border-color:var(--line-2)}
+.note{color:var(--dim);font-size:12px}
+.btn{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:1px solid var(--accent);border-radius:4px;padding:6px 12px;cursor:pointer}
+.btn.ghost{background:none;color:var(--accent)}
+.btn:disabled{background:none;color:var(--dim);border-color:var(--line-2);cursor:not-allowed}
+.log{margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font:12px/1.6 var(--mono);color:var(--muted);max-height:170px;overflow:auto}
+.log div b{color:var(--text)}
+.grid{display:grid;grid-template-columns:minmax(260px,1fr) 2fr;gap:18px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 6px;font:600 16px var(--sans)}
+.card .meta{font:12px var(--mono);color:var(--muted)}
+.lead-item{cursor:pointer}
+.lead-item.on{border-color:var(--accent)}
+.prompt{font:13px var(--mono);background:var(--bg);border-left:2px solid var(--accent);padding:10px 12px;margin:10px 0;color:var(--text);white-space:pre-wrap}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.checks input{accent-color:var(--accent);margin-top:3px}
+.reason{font:12px var(--mono);color:var(--muted);margin-top:8px}
+.reason.bad{color:var(--red)}
+.reason.good{color:var(--green)}
+footer{padding:16px 20px;color:var(--dim);font:12px var(--mono);border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="strip">Demo · Sample data <span>Interactive demo with sample data. Runs, leads and drafts are illustrative; nothing here is live or published.</span></div>
+
+<header>
+  <div class="brand">Penfield Desk <small>Notitia Civica · Master Control</small></div>
+  <nav class="site" aria-label="Site">
+    <a href="index.html">Switchboard</a>
+    <a href="triage.html">Triage Desk</a>
+    <a href="legislative.html">Legislative Desk</a>
+    <a href="narrative.html">Narrative Desk</a>
+    <a href="penfield.html" class="on" aria-current="page">Penfield Desk</a>
+    <a href="mcp.html">MCP Console</a>
+    <a href="citizen.html">Citizen Cognisance</a>
+    <a href="briefs/index.html">Briefs</a>
+  </nav>
+  <div class="engine">brief writer <b>llama3.2:3b</b></div>
+</header>
+
+<div class="lede">
+  <p>The other desks show what the cycles <b>already did</b>. Penfield is where the operator decides <b>what happens next</b>: which engines run, which leads get drafted, what goes back to research, and what gets signed and published. It is the only desk that publishes to the public site.</p>
+  <div class="counts" id="counts"></div>
+</div>
+
+<div class="tabs" role="tablist">
+  <button data-tab="fleet" class="on">[Fleet Control]</button>
+  <button data-tab="triage">[Triage Queue]</button>
+  <button data-tab="research">[Needs Primary Source]</button>
+  <button data-tab="desk">[Editorial Desk]</button>
+  <button data-tab="publish">[Publish &amp; Deploy]</button>
+</div>
+
+<main>
+  <section class="pane on" id="fleet">
+    <h2>Fleet Control</h2>
+    <p class="help">Choose what runs. An engine that needs editor-supplied inputs, or has no harvest entry point yet, says so and its button stays off instead of pretending to run.</p>
+    <table><thead><tr><th>Engine</th><th>Desk</th><th>Last run</th><th>Status</th><th></th></tr></thead><tbody id="fleet-rows"></tbody></table>
+    <div class="log" id="fleet-log" aria-live="polite"></div>
+  </section>
+
+  <section class="pane" id="triage">
+    <h2>Triage Queue</h2>
+    <p class="help">Everything the engines hand off, newest first, with its tier kept. A <b>rule_based</b> record arrives as a lead only; only an <b>llm_verified</b> record can be drafted toward publication.</p>
+    <table><thead><tr><th>Lead</th><th>From</th><th>Score</th><th>Tier</th><th></th></tr></thead><tbody id="triage-rows"></tbody></table>
+  </section>
+
+  <section class="pane" id="research">
+    <h2>Needs Primary Source</h2>
+    <p class="help">Leads that cite only secondary sources wait here for the operator to find the primary record. Publication gates are unchanged; nothing in this queue can be signed.</p>
+    <table><thead><tr><th>Lead</th><th>Failed gate</th><th>Why</th><th></th></tr></thead><tbody id="research-rows"></tbody></table>
+  </section>
+
+  <section class="pane" id="desk">
+    <h2>Editorial Desk</h2>
+    <p class="help">Pick a drafted lead, read it against its sources, tick every check, then sign. Signing is refused until all five checks are ticked.</p>
+    <div class="grid">
+      <div id="desk-list"></div>
+      <div id="desk-detail"><div class="card"><p class="note">Draft a lead from the Triage Queue, or pick one on the left.</p></div></div>
+    </div>
+  </section>
+
+  <section class="pane" id="publish">
+    <h2>Publish &amp; Deploy</h2>
+    <p class="help">Signed articles wait here. Hold keeps one back; Deploy sends everything released to the public Notitia Civica site.</p>
+    <table><thead><tr><th>Article</th><th>Signed</th><th>State</th><th></th></tr></thead><tbody id="publish-rows"></tbody></table>
+    <p style="margin-top:14px"><button class="btn" id="deploy">Deploy to site</button></p>
+    <div class="log" id="deploy-log" aria-live="polite"></div>
+  </section>
+</main>
+
+<footer>Mirrors the real Penfield Desk (Fleet Control, Triage Queue, research queue, Editorial Desk, Publish &amp; Deploy). Sample data only, as of now.</footer>
+
+<script>
+(() => {
+  const ENGINES = [
+    {group:"Engines", name:"Oregon Civic", desk:"Civic", run:true},
+    {group:"Engines", name:"Federal Civic", desk:"Civic", run:true},
+    {group:"Engines", name:"Supply Chain", desk:"Economy", run:true},
+    {group:"Engines", name:"Health and Biomed", desk:"Health", run:true},
+    {group:"Engines", name:"Defense Contracts", desk:"Defense", run:true, note:"Runs USAspending only; GAO dockets are editor-supplied."},
+    {group:"Engines", name:"UAP Telemetry", desk:"UAP", run:false, note:"Needs witness reports and orbital elements from the editor; no harvest entry point yet."},
+    {group:"Engines", name:"Archaeology LiDAR", desk:"Antiquity", run:false, note:"Needs editor-defined survey areas; locations stay Editor Eyes Only."},
+    {group:"Engines", name:"Living Folklore", desk:"Folklore", run:true},
+    {group:"Engines", name:"Prophecy Calendar", desk:"Disinfo", run:false, note:"A computed calendar read by the detectors; it harvests nothing."},
+    {group:"Engines", name:"Esoteric Philosophy", desk:"Esoteric", run:false, note:"Needs editor-supplied movements and their own public pages."},
+    {group:"Engines", name:"CT Mapper", desk:"Disinfo", run:false, note:"Reads a moby-dork harvest manifest; run it after a Moby batch."},
+    {group:"Importers", name:"[spec-1]", desk:"Disinfo", run:true},
+    {group:"Importers", name:"[pdx-1i]", desk:"Civic", run:true},
+    {group:"Importers", name:"[proc_track]", desk:"Civic", run:true},
+    {group:"Importers", name:"[gatepost]", desk:"Civic", run:true},
+    {group:"Importers", name:"[lead_hunter]", desk:"Investigations", run:true},
+    {group:"Importers", name:"[threat-signal-console]", desk:"Cyber", run:true},
+    {group:"Adapters", name:"Claim Matcher", desk:"Disinfo", run:true},
+    {group:"Adapters", name:"Travel", desk:"Travel", run:true},
+    {group:"Adapters", name:"Nature", desk:"Nature", run:true},
+  ];
+  ENGINES.forEach((e, i) => { e.last = e.run ? ["2h ago","5h ago","yesterday","3h ago"][i % 4] : "never"; });
+
+  let LEADS = [
+    {id:"L-2091", q:"Which Oregon agencies have missed the open-data inventory deadline set by SB 1530?", from:"[proc_track]", score:0.81, tier:"llm_verified",
+     prompt:"Pull each covered agency's published dataset inventory and compare it to the SB 1530 deadline. List agencies with no inventory, with the agency page as the source."},
+    {id:"L-2088", q:"Did Portland's shelter-siting hearing change the adopted site list?", from:"[pdx-1i]", score:0.74, tier:"llm_verified",
+     prompt:"Compare the site list in the interim committee packet with the list adopted afterward. Cite both documents and note any site added or dropped."},
+    {id:"L-2086", q:"Federal grant awards to Oregon counties rose sharply this quarter.", from:"Federal Civic", score:0.69, tier:"rule_based",
+     prompt:"Check the award totals against the prior four quarters in USAspending before treating the rise as real."},
+    {id:"L-2083", q:"Repeated phrasing across several opinion pieces on a ballot measure.", from:"[spec-1]", score:0.66, tier:"rule_based",
+     prompt:"List the pieces, dates and shared passages. Report the measurement only; a person makes the call on coordination."},
+    {id:"L-2079", q:"A vendor named in two county contracts shares an address with a campaign committee.", from:"[lead_hunter]", score:0.72, tier:"llm_verified",
+     prompt:"Confirm both records from the county contract portal and the state campaign-finance filing. Describe the documented link only, not an allegation."},
+  ];
+  let RESEARCH = [
+    {id:"R-311", q:"Port container dwell times rising at a West Coast terminal", gate:"Source gate", why:"Only trade-press coverage cited; no port authority data yet."},
+    {id:"R-309", q:"New ransomware strain targeting municipal billing systems", gate:"Source gate", why:"Vendor blog only; needs an advisory or a victim notice."},
+    {id:"R-305", q:"County commissioner travel spending above peer counties", gate:"Source gate", why:"News report cites figures; needs the county expense records."},
+  ];
+  const DRAFTS = {};
+  const PUB = [
+    {title:"How Oregon's measure counter verifies each vote record", signed:"Nov 24", state:"released"},
+    {title:"What the interim committees will take up in December", signed:"Nov 25", state:"held"},
+  ];
+  const CHECKS = [
+    ["sources_read","I read every cited primary source"],
+    ["quotes_verified","I checked every quote against its source"],
+    ["fairness_reviewed","Subjects were treated fairly and given context"],
+    ["legal_reviewed","PII and defamation risk were reviewed"],
+    ["plain_language_reviewed","Summary is plain language and free of insider jargon"],
+  ];
+  let current = null;
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const now = () => new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+
+  function counts(){
+    const drafted = Object.keys(DRAFTS).length;
+    const signed = PUB.length;
+    $("#counts").innerHTML = [
+      [LEADS.length,"In triage"],[RESEARCH.length,"Need primary source"],[drafted,"Drafts"],[signed,"Signed"]
+    ].map(([n,l]) => `<div class="count"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+  }
+
+  function fleet(){
+    let g = "", html = "";
+    ENGINES.forEach((e, i) => {
+      if (e.group !== g){ g = e.group; html += `<tr class="group"><td colspan="5">${g}</td></tr>`; }
+      html += `<tr><td>${esc(e.name)}${e.note ? `<div class="note">${esc(e.note)}</div>` : ""}</td><td>${e.desk}</td><td>${e.last}</td>
+        <td>${e.run ? '<span class="pill ok">ready</span>' : '<span class="pill off">needs input</span>'}</td>
+        <td><button class="btn ghost" data-run="${i}" ${e.run ? "" : "disabled"}>Run</button></td></tr>`;
+    });
+    $("#fleet-rows").innerHTML = html;
+  }
+
+  function logLine(el, html){ const d = document.createElement("div"); d.innerHTML = html; el.prepend(d); }
+
+  function triage(){
+    $("#triage-rows").innerHTML = LEADS.map(l => {
+      const verified = l.tier === "llm_verified";
+      const done = DRAFTS[l.id];
+      return `<tr><td>${esc(l.q)}<div class="note">${l.id}</div></td><td>${esc(l.from)}</td><td>${l.score.toFixed(2)}</td>
+        <td><span class="pill ${verified ? "ok" : "lead"}">${l.tier}</span></td>
+        <td>${verified
+          ? `<button class="btn${done ? " ghost" : ""}" data-draft="${l.id}">${done ? "Open draft" : "Draft"}</button>`
+          : `<span class="note">lead only · research it</span>`}</td></tr>`;
+    }).join("");
+  }
+
+  function research(){
+    $("#research-rows").innerHTML = RESEARCH.length ? RESEARCH.map(r => `<tr><td>${esc(r.q)}<div class="note">${r.id}</div></td>
+      <td><span class="pill no">${r.gate}</span></td><td class="note">${esc(r.why)}</td>
+      <td><button class="btn ghost" data-dismiss="${r.id}">Dismiss</button></td></tr>`).join("")
+      : `<tr><td colspan="4" class="note">Nothing waiting on a primary source.</td></tr>`;
+  }
+
+  function deskList(){
+    const ids = Object.keys(DRAFTS);
+    $("#desk-list").innerHTML = ids.length ? ids.map(id => {
+      const l = LEADS.find(x => x.id === id) || DRAFTS[id].lead;
+      return `<div class="card lead-item${current === id ? " on" : ""}" data-open="${id}"><div class="meta">${id} · ${esc(l.from)}</div><h3>${esc(DRAFTS[id].headline)}</h3><div class="meta">${DRAFTS[id].signed ? "signed" : "draft"}</div></div>`;
+    }).join("") : `<div class="card"><p class="note">No drafts yet. Draft an llm_verified lead from the Triage Queue.</p></div>`;
+  }
+
+  function deskDetail(){
+    if (!current){ return; }
+    const d = DRAFTS[current], l = d.lead;
+    const ticked = CHECKS.filter(([k]) => d.checks[k]).length;
+    const ready = ticked === CHECKS.length;
+    $("#desk-detail").innerHTML = `<div class="card">
+      <div class="meta">${l.id} · ${esc(l.from)} · <span class="pill ok">${l.tier}</span> · badge ANALYSIS</div>
+      <h3 style="margin-top:8px">${esc(d.headline)}</h3>
+      <div class="meta">Public question</div><p style="margin:4px 0 0">${esc(l.q)}</p>
+      <div class="prompt">${esc(l.prompt)}</div>
+      <div class="checks">${CHECKS.map(([k, label]) => `<label><input type="checkbox" data-check="${k}" ${d.checks[k] ? "checked" : ""} ${d.signed ? "disabled" : ""}> ${label}</label>`).join("")}</div>
+      <p style="margin-top:12px"><button class="btn" id="sign" ${ready && !d.signed ? "" : "disabled"}>${d.signed ? "Signed" : "Sign"}</button></p>
+      <div class="reason ${d.signed ? "good" : ready ? "good" : "bad"}">${d.signed ? "Signed and sent to Publish & Deploy." : ready ? "All checks ticked. Ready to sign." : `Sign refused: ${CHECKS.length - ticked} check(s) unticked.`}</div>
+    </div>`;
+  }
+
+  function publish(){
+    $("#publish-rows").innerHTML = PUB.map((p, i) => `<tr><td>${esc(p.title)}</td><td>${p.signed}</td>
+      <td><span class="pill ${p.state === "released" ? "ok" : "lead"}">${p.state}</span></td>
+      <td><button class="btn ghost" data-toggle="${i}">${p.state === "released" ? "Hold" : "Release"}</button></td></tr>`).join("");
+  }
+
+  function all(){ counts(); fleet(); triage(); research(); deskList(); deskDetail(); publish(); }
+
+  function tab(name){
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+    document.querySelectorAll("section.pane").forEach(s => s.classList.toggle("on", s.id === name));
+  }
+
+  document.addEventListener("click", ev => {
+    const t = ev.target.closest("button, .lead-item");
+    if (!t) return;
+    if (t.dataset.tab) tab(t.dataset.tab);
+    if (t.dataset.run){
+      const e = ENGINES[+t.dataset.run];
+      t.disabled = true; t.textContent = "Running";
+      setTimeout(() => {
+        const w = 1 + Math.floor(Math.random() * 5), r = Math.floor(Math.random() * 4);
+        e.last = "just now";
+        logLine($("#fleet-log"), `${now()} · <b>${esc(e.name)}</b> · ${w} lead(s) written, ${r} rejected by triage`);
+        fleet();
+      }, 900);
+    }
+    if (t.dataset.draft){
+      const l = LEADS.find(x => x.id === t.dataset.draft);
+      if (!DRAFTS[l.id]) DRAFTS[l.id] = {lead:l, headline:l.q.replace(/\?$/, ""), checks:{}, signed:false};
+      current = l.id; tab("desk"); all();
+    }
+    if (t.dataset.open){ current = t.dataset.open; all(); }
+    if (t.dataset.dismiss){ RESEARCH = RESEARCH.filter(r => r.id !== t.dataset.dismiss); all(); }
+    if (t.id === "sign"){
+      const d = DRAFTS[current]; d.signed = true;
+      PUB.unshift({title:d.headline, signed:"today", state:"held"});
+      all();
+    }
+    if (t.dataset.toggle){
+      const p = PUB[+t.dataset.toggle]; p.state = p.state === "released" ? "held" : "released"; publish();
+    }
+    if (t.id === "deploy"){
+      const out = PUB.filter(p => p.state === "released");
+      logLine($("#deploy-log"), out.length
+        ? `${now()} · deploy (demo) · <b>${out.length}</b> released article(s) would go to the public site · ${PUB.length - out.length} held back`
+        : `${now()} · deploy refused · nothing released`);
+    }
+  });
+
+  document.addEventListener("change", ev => {
+    const k = ev.target.dataset && ev.target.dataset.check;
+    if (k && current){ DRAFTS[current].checks[k] = ev.target.checked; deskDetail(); }
+  });
+
+  all();
+})();
+</script>
+</body>
+</html>
